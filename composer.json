@@ -1,0 +1,16 @@
+{
+    "name": "tpg/pcflib",
+    "description": "Generate the XML feed for pricecheck.co.za price comparrison service.",
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "symfony/var-dumper": "^4.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "warrick",
+            "email": "me@warrickbayman.co.za"
+        }
+    ],
+    "require": {}
+}
