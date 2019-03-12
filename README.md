@@ -52,18 +52,18 @@ $feed->offers()->add((new TPG\Pcflib\Offer())->...);
 
 #### Setting the category
 
-Price Check has a large catalog of products that are organized into categories. You can set the category by passing an array of category items to the `setCategory()` method. The array MUST be flat and contain only the string category names and they must appear in the correct order. For example, if you are added a book to the `Autobiographies` categry, you could:
+Price Check has a large catalog of products that are organized into categories. You can set the category by passing an array of category items to the `category()` method. The array MUST be flat and contain only the category names. The names must appear in the correct order. For example, if you are added a book to the `Autobiographies` categry, you could:
 
 ```php
-$offer->setCategory(['Books', 'Non-fiction', 'Autobiographies']);
+$offer->category(['Books', 'Non-fiction', 'Autobiographies']);
 ```
 
 It is important that the category names are correct. Check the website is you're unsure.
 
-The `setCategory` method also takes a second argument which must be an instance of `Category` class. This is only required for categories that have additional attributes that need to be set. These categories are currently `Books`, `Videos`, `Clothing`, `Wine` and `Music`. Pcflib provides classes that extend `Category` for each of these:
+The `category()` method also takes a second argument which must be an instance of `Category` class. This is only required for categories that have additional attributes that need to be set. These categories are currently `Books`, `Videos`, `Clothing`, `Wine` and `Music`. Pcflib provides classes that extend `Category` for each of these:
 
 ```php
-$offers->setCategory(['Books', 'Non-fiction', 'Autobiographies'],
+$offer->category(['Books', 'Non-fiction', 'Autobiographies'],
     (new TPC\Pcflib\Categories\Book)
         ->setFormat(TPC\Pcflib\Categories\Book::FORMAT_HARDCOVER)
         ->setIsbn('1234-5678-9012-3456')
@@ -80,35 +80,40 @@ Missing a required attribute will throw a `MissingCategoryAttribute` exception.
 You'll want to specify some more product specific details which can be done through the `setProduct` method. You MUST provide a name, manufacturer, description and SKU number. You can also provide a model number, EAN barcode and UPC code.
 
 ```php
-$offer->setProduct((new TPC\Pcflib\Product())
-    ->setName('In Black and White: The Jake White Story')
-    ->setManufacturer('Zebra Press')
-    ->setDescription('In Black and White traces the life story of Springbok rugby coach Jake White, right up to and including the 2007 Rugby World Cup. [...] White's story will both absorb and astound.')
-    ->setSku(12)
-    ->setEan('60033254123123');
+$offer->product()->name('In Black and White: The Jake White Story')
+    ->manufacturer('Zebra Press')
+    ->description('In Black and White traces the life story of Springbok rugby coach Jake White, right up to and including the 2007 Rugby World Cup. [...] White's story will both absorb and astound.')
+    ->sku(12)
+    ->ean('60033254123123');
 )
 ```
 
 #### Setting price details
 
-All products must have at least a price. However, you can also set a sale price and include delivery pricing as well. Note that Price Check insist that the delivery price is for that product ALONE and without any additional products.
+All offers must have at least a price. However, you can also set a sale price and include delivery pricing as well. Note that Price Check insist that the delivery price is for that product ALONE and without any additional products.
 
 You can set pricing information using the `setPrice()`, `setSalePrice()` and `setDeliveryPrice()` methods.
 
 ```php
-$product
-    ->setPrice(151,96)
-    ->setSalePrice(139)
-    ->setDeliveryPrice(45)
+$offer
+    price()->price(151.96)
+    ->salePrice(139)
+    ->deliveryPrice(45)
 );
+```
+
+You can also set the price by passing the values to the `price()` constructor:
+
+```php
+$offer->price(151.96, 139, 45);
 ```
 
 #### Contract pricing
 
-Price check also provides support for contract pricing. You can set this using the `setContract()` method:
+Price check also provides support for contract pricing. You can set this using the `contract()` method on the `Price` object:
 
 ```php
-$product->setContract(600, 24, TPG\Pcflib\Product::CONTRACT_PERIOD_MONTHS);
+$offer->price()->contract(600, 24, TPG\Pcflib\Product::CONTRACT_PERIOD_MONTHS);
 ```
 
 The first parameter is the cash component, the second parameter is the period length and the last parameter is the period type which can be one of:
@@ -117,13 +122,15 @@ The first parameter is the cash component, the second parameter is the period le
  - `CONTRACT_PERIOD_WEEKS`
  - `CONTRACT_PERIOD_DAYS`
 
+> Take note that the use of `contract` will NOT invalidate values set using the `price()`, `salesPrice()` or `deliveryPrice()` methods.
+
 #### Setting product URLs
 
 The links for the products can be set on the offer directly using the `setProductUrl` and `setImageUrl` methods:
 
 ```php
-$product->setProductUrl('http://www.example.com/showproduct.php?product_id=21');
-$product->setImageUrl('http://www.example.com/showimage.php?product_id=21');
+$offer->setProductUrl('http://www.example.com/showproduct.php?product_id=21');
+$offer->setImageUrl('http://www.example.com/showimage.php?product_id=21');
 ```
 
 #### Marking an offer as Second Hand
@@ -131,11 +138,11 @@ $product->setImageUrl('http://www.example.com/showimage.php?product_id=21');
 Sometimes you may want to mark a product as "used" or "second hard". You can do so by calling the `secondHand()` method. If you need to _unset_ the used status of a product, pass a boolean "false" as the only parameter:
 
 ```php
-$product->secondHand();
+$offer->secondHand();
 
 // or...
 
-$product->secondHand(false);
+$offer->secondHand(false);
 ```
 
 #### Setting stock availability
@@ -145,9 +152,9 @@ You can also pass in stock availability details. If a product is in stock, you c
 When setting a product as in stock, you can also specify the number of items on hand by passing an integer to `setStockLevel()`:
 
 ```php
-$product
+$offer->availability()
     ->inStock(true)
-    ->setStockLevel(100);
+    ->stockLevels(100);
 ```
 
 #### Additional setters
@@ -155,9 +162,9 @@ $product
 There are a few additional, optional setter that can be used to define your product:
 
 ```php
-$product
+$offer
     // Price Check Marketplace
-    ->setMarketplace(false)
+    ->availability()->setMarketplace(false)
     
     // If the product is a bundle
     ->setBundle(false)
@@ -175,10 +182,10 @@ $product
 
 ### Getting offers:
 
-You can get an array of offers already added by using the `get()` method. The result will be an array of `Offer` objects.
+You can get an array of offers already added by using the `toArray()` method. The result will be an array of `Offer` objects.
 
 ```php
-$offers = $feed->offers()->get();
+$offers = $feed->offers()->toArray();
 ```
 
 ### Altering offers:
