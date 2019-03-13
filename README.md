@@ -1,6 +1,8 @@
 # PCFLib
 __Price Check Feed XML Library__
 
+![](https://travis-ci.org/tpg/pcflib.svg?branch=master)
+
 The PCFLib is an XML generator for the PriceCheck Offers XML Feed. The library is designed to help generate the XML needed so that PriceCheck can source product information over HTTP. The library 
 
 ## Installation
