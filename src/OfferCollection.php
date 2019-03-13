@@ -4,13 +4,16 @@ namespace TPG\Pcflib;
 
 use TPG\Pcflib\Contracts\Arrayable;
 use TPG\Pcflib\Contracts\Jsonable;
+use TPG\Pcflib\Traits\ArrayAccessible;
 
 /**
  * Class OfferCollection
  * @package TPG\Pcflib
  */
-class OfferCollection implements \Countable, Arrayable, Jsonable
+class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
 {
+    use ArrayAccessible;
+
     /**
      * @var Offer[]
      */
@@ -64,7 +67,9 @@ class OfferCollection implements \Countable, Arrayable, Jsonable
         });
 
         if (count($offers) >= 1) {
-            return $offers[0];
+            $offer = $offers[0];
+            $offer->parent($this);
+            return $offer;
         }
 
         return null;
@@ -82,6 +87,30 @@ class OfferCollection implements \Countable, Arrayable, Jsonable
         if ($offer) {
             return (new Offer())->fill($offer->toArray());
         }
+    }
+
+    /**
+     * Remove an offer from the collection
+     *
+     * @param $sku
+     */
+    public function delete($sku)
+    {
+        $offer = $this->find($sku);
+        $index = array_search($offer, $this->offers);
+        unset($this->offers[$index]);
+        $this->offers = array_values($this->offers);
+    }
+
+    /**
+     * Clear the collection
+     *
+     * @return $this
+     */
+    public function purge()
+    {
+        $this->offers = [];
+        return $this;
     }
 
     /**
@@ -114,6 +143,7 @@ class OfferCollection implements \Countable, Arrayable, Jsonable
      *
      * @param \DOMDocument $document
      * @return \DOMDocument
+     * @throws Exceptions\MissingRequiredAttribute
      */
     public function toXml(\DOMDocument $document)
     {

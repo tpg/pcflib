@@ -4,6 +4,7 @@ namespace TPG\Pcflib;
 
 use TPG\Pcflib\Categories\Category;
 use TPG\Pcflib\Contracts\Arrayable;
+use TPG\Pcflib\Traits\Collectable;
 use TPG\Pcflib\Traits\HasAttributes;
 
 /**
@@ -12,7 +13,7 @@ use TPG\Pcflib\Traits\HasAttributes;
  */
 class Offer implements Arrayable
 {
-    use HasAttributes;
+    use HasAttributes, Collectable;
 
     const CONTRACT_PERIOD_MONTHS = 'Months';
     const CONTRACT_PERIOD_WEEKS = 'Weeks';
@@ -20,6 +21,15 @@ class Offer implements Arrayable
 
     const AVAILABILITY_IN_STOCK = 'In Stock';
     const AVAILABILITY_OUT_OF_STOCK = 'Out of Stock';
+
+    const ORDERED_FROM_SUPPLIER = -1;
+
+    const UNIT_MEASURE_ML = 'ml';
+    const UNIT_MEASURE_L = 'l';
+    const UNIT_MEASURE_KL = 'kl';
+    const UNIT_MEASURE_MM = 'mm';
+    const UNIT_MEASURE_CM = 'cm';
+    const UNIT_MEASURE_M = 'm';
 
     /**
      * The text fields that need to be wrapped in CDATA when exporting to XML.
@@ -39,8 +49,6 @@ class Offer implements Arrayable
         'StockAvailability',
         'GroupID',
     ];
-
-    protected $requiredAttributes = [];
 
     /**
      * Second Hand product
@@ -201,7 +209,38 @@ class Offer implements Arrayable
     public function price(float $price, float $salePrice = null, float $deliveryCost = null): Offer
     {
         $this->attributes['Price'] = $price;
+
+        if ($salePrice) {
+            $this->salesPrice($salePrice);
+        }
+
+        if ($deliveryCost) {
+            $this->deliveryCost($deliveryCost);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the sales price
+     *
+     * @param float $salePrice
+     * @return Offer
+     */
+    public function salesPrice(float $salePrice): Offer
+    {
         $this->attributes['SalePrice'] = $salePrice;
+        return $this;
+    }
+
+    /**
+     * Set the delivery cost
+     *
+     * @param float $deliveryCost
+     * @return Offer
+     */
+    public function deliveryCost(float $deliveryCost): Offer
+    {
         $this->attributes['DeliveryCost'] = $deliveryCost;
         return $this;
     }
@@ -329,12 +368,17 @@ class Offer implements Arrayable
     }
 
     /**
+     * Set the number of units and their size
+     *
+     * @param int $count
      * @param int $unit
      * @param string $measure
      * @return $this
      */
-    public function unitMeasure(int $unit, string $measure)
+    public function units(int $count, int $unit, string $measure)
     {
+        $this->attributes['NoOfUnits'] = $count;
+
         $this->attributes['UnitMeasure'] = [
             'Unit' => $unit,
             'Measure' => $measure
@@ -343,13 +387,14 @@ class Offer implements Arrayable
     }
 
     /**
-     * @param int $count
-     * @return $this
+     * Delete this Offer from the parent collection
      */
-    public function unitCount(int $count)
+    public function delete()
     {
-        $this->attributes['NoOfUnits'] = $count;
-        return $this;
+        if ($this->parent && array_key_exists('ShopSKU', $this->attributes)) {
+
+            $this->parent->delete($this->attributes['ShopSKU']);
+        }
     }
 
     /**

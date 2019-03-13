@@ -150,4 +150,60 @@ class OfferTest extends TestCase
 
         $this->assertNotEquals('Computers > Apple', $feed->offers()->find(1234567890)->toArray()['Category']);
     }
+
+    /**
+     * @test
+     */
+    public function an_offer_can_be_deleted_by_sku()
+    {
+        $feed = new Builder();
+        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies']);
+        $offer->sku(10);
+        $offer2 = new Offer(['Clothing', 'Children', 'Girls']);
+        $offer2->sku(20);
+
+        $feed->offers()->add([$offer, $offer2]);
+
+        $feed->offers()->delete(10);
+
+        $this->assertCount(1, $feed->offers());
+        $this->assertEquals(20, $feed->offers()[0]->toArray()['ShopSKU']);
+    }
+
+    /**
+     * @test
+     */
+    public function an_offer_can_delete_itself_from_the_collection()
+    {
+        $feed = new Builder();
+        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies']);
+        $offer->sku(10);
+        $offer2 = new Offer(['Clothing', 'Children', 'Girls']);
+        $offer2->sku(20);
+
+        $feed->offers()->add([$offer, $offer2]);
+
+        $feed->offers()->find(10)->delete();
+
+        $this->assertCount(1, $feed->offers());
+        $this->assertEquals(20, $feed->offers()[0]->toArray()['ShopSKU']);
+    }
+
+    /**
+     * @test
+     */
+    public function a_collection_can_be_purged()
+    {
+        $feed = new Builder();
+        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies']);
+        $offer->sku(10);
+        $offer2 = new Offer(['Clothing', 'Children', 'Girls']);
+        $offer2->sku(20);
+
+        $feed->offers()->add([$offer, $offer2]);
+
+        $feed->offers()->purge();
+
+        $this->assertCount(0, $feed->offers());
+    }
 }
