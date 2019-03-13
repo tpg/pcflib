@@ -1,5 +1,5 @@
 {
-    "name": "tpg/pcflib",
+    "name": "thepublicgood/pcflib",
     "description": "Generate the XML feed for pricecheck.co.za price comparrison service.",
     "require-dev": {
         "phpunit/phpunit": "^8.0",
