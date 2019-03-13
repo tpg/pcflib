@@ -28,11 +28,17 @@ class OfferCollection implements \Countable, Arrayable, Jsonable
     /**
      * Add an offer to the collection
      *
-     * @param Offer $offer
+     * @param mixed $offers
+     * @return OfferCollection
      */
-    public function add(Offer $offer)
+    public function add($offers): OfferCollection
     {
-        $this->offers[] = $offer;
+        if (is_array($offers)) {
+            $this->offers = array_merge($this->offers, $offers);
+            return $this;
+        }
+        $this->offers[] = $offers;
+        return $this;
     }
 
     /**

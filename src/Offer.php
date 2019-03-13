@@ -22,11 +22,6 @@ class Offer implements Arrayable
     const AVAILABILITY_OUT_OF_STOCK = 'Out of Stock';
 
     /**
-     * @var Category
-     */
-    protected $categoryAttributes;
-
-    /**
      * The text fields that need to be wrapped in CDATA when exporting to XML.
      *
      * @var array
@@ -45,6 +40,7 @@ class Offer implements Arrayable
         'GroupID',
     ];
 
+    protected $requiredAttributes = [];
 
     /**
      * Second Hand product
@@ -127,7 +123,7 @@ class Offer implements Arrayable
      */
     public function name(string $name): Offer
     {
-        $this->attributes['Name'] = $name;
+        $this->attributes['ProductName'] = $name;
 
         return $this;
     }
@@ -308,7 +304,7 @@ class Offer implements Arrayable
      */
     public function marketplace($marketplace = true): Offer
     {
-        $this->attributes['Marketplace'] = $marketplace;
+        $this->attributes['Marketplace'] = $marketplace ? '1' : null;
         return $this;
     }
 
@@ -318,7 +314,7 @@ class Offer implements Arrayable
      */
     public function bundle($bundle = true): Offer
     {
-        $this->attributes['Bundle'] = $bundle;
+        $this->attributes['Bundle'] = $bundle ? '1' : null;
         return $this;
     }
 
@@ -407,8 +403,10 @@ class Offer implements Arrayable
     /**
      * @param \DOMNode $node
      * @return void
+     * @throws Exceptions\MissingRequiredAttribute
      */
     public function toXmlNode(\DOMNode $node) {
+        $this->verifyAttributes();
         $this->addAttributesToXmlElement($node, $this->attributes);
     }
 }
