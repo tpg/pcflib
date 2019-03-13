@@ -18,10 +18,32 @@ class Offer implements Arrayable
     const CONTRACT_PERIOD_WEEKS = 'Weeks';
     const CONTRACT_PERIOD_DAYS = 'Days';
 
+    const AVAILABILITY_IN_STOCK = 'In Stock';
+    const AVAILABILITY_OUT_OF_STOCK = 'Out of Stock';
+
     /**
      * @var Category
      */
     protected $categoryAttributes;
+
+    /**
+     * The text fields that need to be wrapped in CDATA when exporting to XML.
+     *
+     * @var array
+     */
+    protected $textFields = [
+        'Category',
+        'ProductName',
+        'Manufacturer',
+        'ShopSKU',
+        'ModelNumber',
+        'Description',
+        'ProductURL',
+        'ImageURL',
+        'Notes',
+        'StockAvailability',
+        'GroupID',
+    ];
 
 
     /**
@@ -344,5 +366,49 @@ class Offer implements Arrayable
         return array_filter($this->attributes, function ($attribute) {
             return $attribute ? true : false;
         });
+    }
+
+    /**
+     * Add attributes to the XML node
+     *
+     * @param \DOMNode $node
+     * @param null $attributes
+     * @return void
+     */
+    protected function addAttributesToXmlElement(\DOMNode $node, $attributes = null)
+    {
+        foreach ($attributes as $key => $value) {
+
+            if ($value) {
+
+                $offerNode = new \DOMElement($key);
+
+                $node->appendChild($offerNode);
+
+                if (is_array($value)) {
+                    $this->addAttributesToXmlElement($offerNode, $value);
+                } else {
+
+                    if (in_array($key, $this->textFields)) {
+
+                        $value = $node->ownerDocument->createCDATASection($value);
+                        $offerNode->appendChild($value);
+                    } else {
+
+                        $offerNode->textContent = $value;
+                    }
+
+                    $node->appendChild($offerNode);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param \DOMNode $node
+     * @return void
+     */
+    public function toXmlNode(\DOMNode $node) {
+        $this->addAttributesToXmlElement($node, $this->attributes);
     }
 }

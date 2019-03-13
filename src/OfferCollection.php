@@ -2,14 +2,17 @@
 
 namespace TPG\Pcflib;
 
+use TPG\Pcflib\Contracts\Arrayable;
+use TPG\Pcflib\Contracts\Jsonable;
+
 /**
  * Class OfferCollection
  * @package TPG\Pcflib
  */
-class OfferCollection implements \Countable
+class OfferCollection implements \Countable, Arrayable, Jsonable
 {
     /**
-     * @var array
+     * @var Offer[]
      */
     protected $offers = [];
 
@@ -61,11 +64,59 @@ class OfferCollection implements \Countable
         return null;
     }
 
+    /**
+     * Clone an Offer object
+     *
+     * @param $sku
+     * @return Offer|null
+     */
     public function clone($sku): ?Offer
     {
         $offer = $this->find($sku);
         if ($offer) {
             return (new Offer())->fill($offer->toArray());
         }
+    }
+
+    /**
+     * Output an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'Offers' => array_map(function (Offer $offer) {
+                return $offer->toArray();
+            }, $this->offers)
+        ];
+    }
+
+    /**
+     * Return a JSON encoded string.
+     *
+     * @param bool $pretty
+     * @return string
+     */
+    public function toJson($pretty = false): string
+    {
+        return json_encode($this->toArray(), JSON_NUMERIC_CHECK + ($pretty ? JSON_PRETTY_PRINT : 0));
+    }
+
+    /**
+     * Generate XML from the offer collection
+     *
+     * @param \DOMDocument $document
+     * @return \DOMDocument
+     */
+    public function toXml(\DOMDocument $document)
+    {
+        $element = $document->createElement('Offers');
+        foreach ($this->offers as $offer) {
+            $offerElenent = $element->appendChild(new \DOMElement('Offer'));
+            $document->appendChild($element);
+            $offer->toXmlNode($offerElenent);
+        }
+        return $document;
     }
 }
