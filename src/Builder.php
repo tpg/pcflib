@@ -43,12 +43,22 @@ class Builder implements Arrayable, Jsonable
 
     /**
      * Generate an XML string
+     * @param null $filename
      * @return string
      */
-    public function toXml()
+    public function toXml($filename = null)
     {
         $document = new \DOMDocument();
+
         $document->encoding = 'UTF-8';
-        return $this->offers->toXml($document)->saveXML();
+
+        $xml = $this->offers->toXml($document);
+
+        if ($filename) {
+
+            $xml->save($filename);
+        }
+
+        return $xml->saveXML();
     }
 }

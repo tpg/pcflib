@@ -71,5 +71,9 @@ class BuilderTest extends TestCase
         $xml = simplexml_load_string($feed->toXml());
         $this->assertEquals('Zebra Books', $xml->Offer[0]->Manufacturer);
         $this->assertEquals('Someone', $xml->Offer[1]->Manufacturer);
+
+        $feed->toXml(__DIR__ . '/test.xml');
+        $this->assertFileExists(__DIR__ . '/test.xml');
+        unlink(__DIR__ . '/test.xml');
     }
 }
