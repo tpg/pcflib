@@ -1,4 +1,4 @@
-# PCFlib
+# PCFLib
 __Price Check Feed XML Library__
 
 The PCFLib is an XML generator for the PriceCheck Offers XML Feed. The library is designed to help generate the XML needed so that PriceCheck can source product information over HTTP. The library 
@@ -99,9 +99,9 @@ $offer->category(['Books', 'Non-fiction', 'Autobiographies'],
 )
 ```
 
-Note that PCFlib will NOT check if a `Category` instance has been provided if one is needed. This is something I might look at later, but for now it's on you to ensure you include the additional attributes if Price Check requires them.
+Note that PCFLib will NOT check if a `Category` instance has been provided if one is needed. This is something I might look at later, but for now it's on you to ensure you include the additional attributes if Price Check requires them.
 
-PCFlib WILL, however, check if the right attributes have been included when using the `Category` classes.
+PCFLib WILL, however, check if the right attributes have been included when using the `Category` classes.
 
 For books, the Format, and ISBN numbers are required. For Videos, you must specify the Format, for Clothing you must specify the Age Group, Colour, Gender and Size of the item, and for Music, you must specify the Format. There are a bunch of optional attributes for each of those categories as well.
 
@@ -193,7 +193,7 @@ $offer->secondHand();
 $offer->secondHand(false);
 ```
 
-In order to see a product as second hand, Price Check require that `SecondHand` appears in the optional `Notes` node. PCFlib will append `SecondHand` to the notes string only when exporting Array, JSON or XML data, so the use of the `notes()` setter will not remove it. Likewise, when changing the second hand status later on, any notes you may have set will not be affected.
+In order to see a product as second hand, Price Check require that `SecondHand` appears in the optional `Notes` node. PCFLib will append `SecondHand` to the notes string only when exporting Array, JSON or XML data, so the use of the `notes()` setter will not remove it. Likewise, when changing the second hand status later on, any notes you may have set will not be affected.
 
 ### Setting stock availability
 
@@ -233,7 +233,7 @@ You can get an array of offers already added by using the `toArray()` method. Th
 $offers = $feed->offers()->toArray();
 ```
 
-PCFlib also provides a `toJson` method which will return a JSON string. Pass a boolean `true` as the only parameter and the string will be pretty printed.
+PCFLib also provides a `toJson` method which will return a JSON string. Pass a boolean `true` as the only parameter and the string will be pretty printed.
 
 ### Finding and Altering offers
 
