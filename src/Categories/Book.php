@@ -55,7 +55,7 @@ class Book extends Category
     {
         $date = $year;
 
-        if (!get_class($year) === \DateTime::class && !is_subclass_of($year, \DateTime::class)) {
+        if (get_class($year) !== \DateTime::class && !is_subclass_of($year, \DateTime::class)) {
 
             $date = new \DateTime(implode('-', [$year, $month, $day]));
         }

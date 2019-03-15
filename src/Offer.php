@@ -413,10 +413,10 @@ class Offer implements Arrayable
      * Add attributes to the XML node
      *
      * @param \DOMNode $node
-     * @param null $attributes
+     * @param array|null $attributes
      * @return void
      */
-    protected function addAttributesToXmlElement(\DOMNode $node, $attributes = null)
+    protected function addAttributesToXmlElement(\DOMNode $node, array $attributes = null)
     {
         foreach ($attributes as $key => $value) {
 

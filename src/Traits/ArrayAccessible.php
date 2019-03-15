@@ -4,6 +4,10 @@ namespace TPG\Pcflib\Traits;
 
 trait ArrayAccessible
 {
+    /**
+     * @var array
+     */
+    protected $items = [];
 
     /**
      * Check if an offset exists
@@ -12,7 +16,7 @@ trait ArrayAccessible
      */
     public function offsetExists($offset): bool
     {
-        return array_key_exists($offset, $this->offers);
+        return array_key_exists($offset, $this->items);
     }
 
     /**
@@ -22,7 +26,7 @@ trait ArrayAccessible
      */
     public function offsetGet($offset)
     {
-        return $this->offers[$offset];
+        return $this->items[$offset];
     }
 
     /**
@@ -33,7 +37,7 @@ trait ArrayAccessible
      */
     public function offsetSet($offset, $value)
     {
-        $this->offers[$offset] = $value;
+        $this->items[$offset] = $value;
     }
 
     /**
@@ -43,6 +47,6 @@ trait ArrayAccessible
      */
     public function offsetUnset($offset)
     {
-        unset($this->offers[$offset]);
+        unset($this->items[$offset]);
     }
 }

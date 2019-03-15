@@ -43,10 +43,11 @@ class Builder implements Arrayable, Jsonable
 
     /**
      * Generate an XML string
-     * @param null $filename
+     * @param string|null $filename
      * @return string
+     * @throws Exceptions\MissingRequiredAttribute
      */
-    public function toXml($filename = null)
+    public function toXml(string $filename = null)
     {
         $document = new \DOMDocument();
 

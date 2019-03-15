@@ -17,7 +17,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
     /**
      * @var Offer[]
      */
-    protected $offers = [];
+    protected $items = [];
 
     /**
      * OfferCollection constructor.
@@ -25,7 +25,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
      */
     public function __construct(array $offers = [])
     {
-        $this->offers = $offers;
+        $this->items = $offers;
     }
 
     /**
@@ -37,10 +37,10 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
     public function add($offers): OfferCollection
     {
         if (is_array($offers)) {
-            $this->offers = array_merge($this->offers, $offers);
+            $this->items = array_merge($this->items, $offers);
             return $this;
         }
-        $this->offers[] = $offers;
+        $this->items[] = $offers;
         return $this;
     }
 
@@ -51,7 +51,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
      */
     public function count()
     {
-        return count($this->offers);
+        return count($this->items);
     }
 
     /**
@@ -62,7 +62,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
      */
     public function find($sku): ?Offer
     {
-        $offers = array_filter($this->offers, function (Offer $offer) use ($sku) {
+        $offers = array_filter($this->items, function (Offer $offer) use ($sku) {
             return $offer->toArray()['ShopSKU'] === (string)$sku;
         });
 
@@ -97,9 +97,9 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
     public function delete($sku)
     {
         $offer = $this->find($sku);
-        $index = array_search($offer, $this->offers);
-        unset($this->offers[$index]);
-        $this->offers = array_values($this->offers);
+        $index = array_search($offer, $this->items);
+        unset($this->items[$index]);
+        $this->items = array_values($this->items);
     }
 
     /**
@@ -109,7 +109,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
      */
     public function purge()
     {
-        $this->offers = [];
+        $this->items = [];
         return $this;
     }
 
@@ -123,7 +123,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
         return [
             'Offers' => array_map(function (Offer $offer) {
                 return $offer->toArray();
-            }, $this->offers)
+            }, $this->items)
         ];
     }
 
@@ -148,7 +148,7 @@ class OfferCollection implements \Countable, Arrayable, \ArrayAccess, Jsonable
     public function toXml(\DOMDocument $document)
     {
         $element = $document->createElement('Offers');
-        foreach ($this->offers as $offer) {
+        foreach ($this->items as $offer) {
             $offerElenent = $element->appendChild(new \DOMElement('Offer'));
             $document->appendChild($element);
             $offer->toXmlNode($offerElenent);
