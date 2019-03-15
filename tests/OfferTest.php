@@ -3,7 +3,7 @@
 namespace Tests;
 
 use TPG\Pcflib\Builder;
-use TPG\Pcflib\Categories\Book;
+use TPG\Pcflib\Categories\Books;
 use TPG\Pcflib\Offer;
 use TPG\Pcflib\OfferCollection;
 
@@ -28,7 +28,7 @@ class OfferTest extends TestCase
      */
     public function an_offer_can_have_extended_category_attributes()
     {
-        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies'], (new Book())->format(Book::FORMAT_HARDCOVER)->isbn('12345')->author('Author'));
+        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies'], (new Books())->format(Books::FORMAT_HARDCOVER)->isbn('12345')->author('Author'));
         $this->assertArrayHasKey('Format', $offer->toArray()['Attributes']);
     }
 
@@ -37,8 +37,8 @@ class OfferTest extends TestCase
      */
     public function a_book_category_offer_will_return_delimited_authors()
     {
-        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies'], (new Book())
-            ->format(Book::FORMAT_HARDCOVER)
+        $offer = new Offer(['Books', 'Non-Fiction', 'Autobiographies'], (new Books())
+            ->format(Books::FORMAT_HARDCOVER)
             ->isbn('12345')
             ->author('Author One', 'Author Two', 'Author Three'));
 
@@ -115,7 +115,7 @@ class OfferTest extends TestCase
         $feed = new Builder();
         $feed->offers()->add((new Offer(
             ['Books', 'Non-Fiction', 'Autobiographies'],
-                (new Book())->isbn('54321')->format(Book::FORMAT_HARDCOVER)->author('Joe Schmoe')
+                (new Books())->isbn('54321')->format(Books::FORMAT_HARDCOVER)->author('Joe Schmoe')
             )
         )->sku(12345));
 

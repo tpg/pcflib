@@ -3,7 +3,7 @@
 namespace Tests;
 
 use TPG\Pcflib\Builder;
-use TPG\Pcflib\Categories\Book;
+use TPG\Pcflib\Categories\Books;
 use TPG\Pcflib\Offer;
 
 class BuilderTest extends TestCase
@@ -16,7 +16,7 @@ class BuilderTest extends TestCase
         $feed = new Builder();
         $feed->offers()->add(
             (new Offer(['Books', 'Non-Fiction', 'Autobiographies'],
-                (new Book())->author('Some Author')->isbn('1234-5678')->format(Book::FORMAT_HARDCOVER))
+                (new Books())->author('Some Author')->isbn('1234-5678')->format(Books::FORMAT_HARDCOVER))
             )->name('Black and White: The Jake White Story')
             ->manufacturer('Zebra Books')
             ->price(249.99)
@@ -35,7 +35,7 @@ class BuilderTest extends TestCase
         $feed = new Builder();
         $feed->offers()->add(
             (new Offer(['Books', 'Non-Fiction', 'Autobiographies'],
-                (new Book())->author('Some Author')->isbn('1234-5678')->format(Book::FORMAT_HARDCOVER))
+                (new Books())->author('Some Author')->isbn('1234-5678')->format(Books::FORMAT_HARDCOVER))
             )->name('Black and White: The Jake White Story')
                 ->manufacturer('Zebra Books')
                 ->price(249.99)
@@ -54,7 +54,7 @@ class BuilderTest extends TestCase
         $feed = new Builder();
         $feed->offers()->add(
             (new Offer(['Books', 'Non-Fiction', 'Autobiographies'],
-                (new Book())->author('Some Author')->isbn('1234-5678')->format(Book::FORMAT_HARDCOVER))
+                (new Books())->author('Some Author')->isbn('1234-5678')->format(Books::FORMAT_HARDCOVER))
             )->name('Black and White: The Jake White Story')
                 ->manufacturer('Zebra Books')
                 ->price(249.99)

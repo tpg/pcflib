@@ -2,7 +2,7 @@
 
 namespace TPG\Pcflib\Categories;
 
-class Book extends Category
+class Books extends Category
 {
     const FORMAT_HARDCOVER = 'Hardcover';
     const FORMAT_SOFTCOVER = 'Soft Cover';
