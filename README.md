@@ -11,7 +11,7 @@ The PCFLib is an XML generator for the PriceCheck Offers XML Feed. The library i
 PCFLib can be installed through Composer:
 
 ```
-composer require tpg/pcflib
+composer require thepublicgood/pcflib
 ```
 
 ## Usage
