@@ -276,11 +276,11 @@ class Offer implements Arrayable
     /**
      * Set stock availabilities
      *
-     * @param int|null $stockAvailability
+     * @param string|null $stockAvailability
      * @param int|null $stockLevel
      * @return Offer
      */
-    public function availability(int $stockAvailability = null, int $stockLevel = null)
+    public function availability(string $stockAvailability = null, int $stockLevel = null)
     {
         $this->attributes['StockAvailability'] = $stockAvailability;
         $this->attributes['StockLevel'] = $stockLevel;
