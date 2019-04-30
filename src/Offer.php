@@ -101,7 +101,9 @@ class Offer implements Arrayable
      */
     public function fill(array $attributes)
     {
-        $this->attributes = $attributes;
+        $this->attributes = array_map(function ($attributes) {
+            return strip_tags($attributes);
+        }, $attributes);
         return $this;
     }
 
@@ -131,7 +133,7 @@ class Offer implements Arrayable
      */
     public function name(string $name): Offer
     {
-        $this->attributes['ProductName'] = $name;
+        $this->attributes['ProductName'] = strip_tags($name);
 
         return $this;
     }
@@ -144,7 +146,7 @@ class Offer implements Arrayable
      */
     public function manufacturer(string $manufacturer): Offer
     {
-        $this->attributes['Manufacturer'] = $manufacturer;
+        $this->attributes['Manufacturer'] = strip_tags($manufacturer);
 
         return $this;
     }
@@ -157,7 +159,7 @@ class Offer implements Arrayable
      */
     public function sku(string $sku): Offer
     {
-        $this->attributes['ShopSKU'] = $sku;
+        $this->attributes['ShopSKU'] = strip_tags($sku);
         return $this;
     }
 
@@ -169,7 +171,7 @@ class Offer implements Arrayable
      */
     public function description(string $description): Offer
     {
-        $this->attributes['Description'] = $description;
+        $this->attributes['Description'] = strip_tags($description);
 
         return $this;
     }
@@ -182,7 +184,7 @@ class Offer implements Arrayable
      */
     public function ean(string $ean): Offer
     {
-        $this->attributes['EAN'] = $ean;
+        $this->attributes['EAN'] = strip_tags($ean);
         return $this;
     }
 
@@ -194,7 +196,7 @@ class Offer implements Arrayable
      */
     public function upc(string $upc): Offer
     {
-        $this->attributes['UPC'] = $upc;
+        $this->attributes['UPC'] = strip_tags($upc);
         return $this;
     }
 
@@ -256,7 +258,7 @@ class Offer implements Arrayable
         $this->attributes['ContractPricing'] = [
             'CashComponent' => $cash,
             'PeriodLength' => $periodLength,
-            'PeriodType' => $periodType
+            'PeriodType' => strip_tags($periodType)
         ];
         return $this;
     }
@@ -269,7 +271,7 @@ class Offer implements Arrayable
      */
     public function modelNumber(string $modelNumber): Offer
     {
-        $this->attributes['ModelNumber'] = $modelNumber;
+        $this->attributes['ModelNumber'] = strip_tags($modelNumber);
         return $this;
     }
 
@@ -295,7 +297,7 @@ class Offer implements Arrayable
      */
     public function productUrl(string $url): Offer
     {
-        $this->attributes['ProductURL'] = $url;
+        $this->attributes['ProductURL'] = strip_tags($url);
         return $this;
     }
 
@@ -307,7 +309,7 @@ class Offer implements Arrayable
      */
     public function imageUrl(string $url): Offer
     {
-        $this->attributes['ImageURL'] = $url;
+        $this->attributes['ImageURL'] = strip_tags($url);
         return $this;
     }
 
@@ -331,7 +333,7 @@ class Offer implements Arrayable
      */
     public function notes(string $notes): Offer
     {
-        $this->attributes['Notes'] = $notes . ($this->secondHand ? ' SecondHand' : null);
+        $this->attributes['Notes'] = strip_tags($notes) . ($this->secondHand ? ' SecondHand' : null);
         return $this;
     }
 
@@ -381,7 +383,7 @@ class Offer implements Arrayable
 
         $this->attributes['UnitMeasure'] = [
             'Unit' => $unit,
-            'Measure' => $measure
+            'Measure' => strip_tags($measure)
         ];
         return $this;
     }
